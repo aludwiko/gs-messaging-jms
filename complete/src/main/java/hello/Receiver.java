@@ -1,14 +1,17 @@
 package hello;
 
 import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Receiver {
 
-	@JmsListener(destination = "mailbox", containerFactory = "myFactory")
-	public void receiveMessage(Email email) {
-		System.out.println("Received <" + email + ">");
+	@JmsListener(destination = "inbox", containerFactory = "myFactory")
+	@SendTo("outbox")
+	public String receiveMessage(String message) {
+		System.out.println("Received <" + message + ">");
+		return message.toUpperCase();
 	}
 
 }
